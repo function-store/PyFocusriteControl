@@ -141,6 +141,44 @@ powershell -ExecutionPolicy Bypass -File scripts\install-startup-task.ps1
 Test immediately with `Start-ScheduledTask -TaskName FocusriteMuteOnLogon`, then
 check `startup.log`. Remove it with `scripts\uninstall-startup-task.ps1`.
 
+## Python library
+
+Beyond the CLI, you can drive the interface from your own scripts. There are two
+layers: a high-level `Focusrite` session and a `requests` module of request
+builders (mirroring the original Node library's `requests` + `clientWrite`).
+
+```python
+from focusrite import Focusrite, requests
+
+MONITOR_MUTE = 1107   # your id from `fc.py monitor`
+
+# connect_from_config() reuses the approved client_key in config.json
+with Focusrite.connect_from_config() as fc:
+    fc.mute(MONITOR_MUTE)                    # high-level helper
+    fc.set(MONITOR_MUTE, False)             # generic set (bool -> true/false)
+    fc.write(requests.mute(MONITOR_MUTE))   # raw request, like Node's clientWrite
+
+    print(fc.get(MONITOR_MUTE))             # read a value (best-effort)
+    print(fc.snapshot())                    # {id: value} for everything seen
+
+    for cid, value in fc.watch(10):         # stream control changes for 10s
+        print(cid, "->", value)
+```
+
+Define your own named constants (ids differ per model) and use them with either
+style — `fc.set(MONITOR_MUTE, True)` or `fc.write(requests.set_item(MONITOR_MUTE, True))`.
+
+| Layer | What |
+|-------|------|
+| `Focusrite` | `connect()` / `connect_from_config()`, `set`/`get`/`snapshot`/`mute`/`unmute`/`toggle`/`watch`/`write`. |
+| `focusrite.requests` | `set_item`, `mute`, `unmute`, `device_subscribe`, `client_details`, `token`. |
+| `Connection` / `discover_port` | The raw protocol, if you want full control. |
+
+> Reading and subscribing work with any client; **changing** values requires an
+> approved `client_key` (see *Setup → Authorise this client*).
+
+The CLI also exposes a raw setter for one-offs: `py -3 fc.py set <id> <value>`.
+
 ## Configuration
 
 `config.json` (created on first run):
@@ -208,15 +246,30 @@ etc.) — the mute control id just differs per model, which the `monitor`/`dump`
 step resolves. Focusrite Control **2** (newer USB-C ranges) uses a different
 backend and is untested.
 
+## Credits & references
+
+This project reimplements, in pure Python, a local protocol reverse-engineered by
+the community. Thanks to:
+
+- **[Mathieu2301/Focusrite-Control-API](https://github.com/Mathieu2301/Focusrite-Control-API)**
+  — the Node library that documented the core protocol: the `Length=XXXXXX <xml>`
+  framing, the `<client-details>` / `<device-subscribe>` / `<keep-alive>`
+  handshake, and the `<set devid="1"><item id=… value=…/></set>` request format.
+- **[daveyijzermans — "Discover Focusrite Control Server on the network"](https://gist.github.com/daveyijzermans/f0354858b3eb765e19361ab85a6bc55b)**
+  — the UDP discovery mechanism (`<client-discovery …/>` broadcast to ports
+  30096–30098 and parsing the announced port).
+
+Beyond those, the following were figured out here and aren't (to our knowledge)
+documented elsewhere: the client-approval requirement and the
+`…\Server\Authorisation\auth.csv` allowlist, and that the monitor mute appears as
+a `<mute id=…/>` node whose state streams as `<item id=… value=…/>` updates.
+
 ## Disclaimer
 
 Unofficial and **not affiliated with, endorsed by, or supported by Focusrite**.
 It relies on an undocumented local protocol discovered by the community and may
 break with Focusrite Control updates. Editing `auth.csv` modifies Focusrite
 Control's own configuration (a backup is made). Use at your own risk.
-
-Protocol groundwork based on the reverse engineering in
-[Mathieu2301/Focusrite-Control-API](https://github.com/Mathieu2301/Focusrite-Control-API).
 
 ## License
 
