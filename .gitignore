@@ -1,0 +1,29 @@
+# --- User-specific config & runtime state (generated on first run) ---
+# config.json holds your unique client_key and discovered mute id — keep it local.
+config.json
+state.json
+
+# --- Diagnostics, dumps, backups ---
+device-dump.xml
+*.log
+*.bak
+
+# --- Built launcher (machine-specific; build with scripts/build-launcher.ps1) ---
+scripts/toggle.exe
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+*.egg-info/
+.mypy_cache/
+.pytest_cache/
+
+# --- Editors / OS ---
+.vscode/
+.idea/
+Thumbs.db
+Desktop.ini
