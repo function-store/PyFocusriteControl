@@ -1,5 +1,6 @@
 {
   "client_key": null,
+  "hostname": "PyFocusriteControl",
   "devid": "1",
   "mute_item_id": null,
   "value_muted": "true",

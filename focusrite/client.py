@@ -153,7 +153,7 @@ class Connection:
         self,
         port: int,
         client_key: str,
-        hostname: str = "MyFocusriteControl",
+        hostname: str = "PyFocusriteControl",
         connect_timeout: float = 5.0,
     ):
         self.port = port

@@ -58,7 +58,7 @@ class Focusrite:
     def connect(
         cls,
         client_key: Optional[str] = None,
-        hostname: str = "MyFocusriteControl",
+        hostname: str = "PyFocusriteControl",
         timeout: float = 3.0,
         ready_timeout: float = 1.0,
     ) -> Iterator["Focusrite"]:
@@ -84,7 +84,7 @@ class Focusrite:
     def connect_from_config(cls, path=None, **kwargs):
         """Like :meth:`connect`, but takes client_key/hostname from config.json."""
         cfg = _load_config(path)
-        kwargs.setdefault("hostname", cfg.get("hostname", "MyFocusriteControl"))
+        kwargs.setdefault("hostname", cfg.get("hostname", "PyFocusriteControl"))
         return cls.connect(client_key=cfg.get("client_key"), **kwargs)
 
     # -- low level ---------------------------------------------------------

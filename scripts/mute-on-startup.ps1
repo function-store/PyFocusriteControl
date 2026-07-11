@@ -12,7 +12,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-$repo = Split-Path -Parent $PSScriptRoot          # ...\MyFocusriteControl
+$repo = Split-Path -Parent $PSScriptRoot          # repo root (parent of scripts\)
 $fc   = Join-Path $repo 'fc.py'
 $log  = Join-Path $repo 'startup.log'
 

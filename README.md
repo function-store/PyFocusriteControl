@@ -1,4 +1,4 @@
-# MyFocusriteControl
+# PyFocusriteControl
 
 > Mute, unmute, or toggle **just the speaker/monitor output** of a Focusrite
 > Scarlett interface from the command line — so you can bind a hotkey (or a
@@ -39,8 +39,8 @@ flip that mute in a few milliseconds. It's pure Python standard library: no
 ## Install
 
 ```powershell
-git clone https://github.com/<you>/MyFocusriteControl.git
-cd MyFocusriteControl
+git clone https://github.com/function-store/PyFocusriteControl.git
+cd PyFocusriteControl
 py -3 fc.py discover      # should print: Focusrite Control Server found on 127.0.0.1:NNNNN
 ```
 
@@ -83,13 +83,13 @@ directly in the server's allowlist. First run any command once (e.g.
 ```powershell
 $f = "C:\ProgramData\Focusrite\Focusrite Control\Server\Authorisation\auth.csv"
 Copy-Item $f "$f.bak" -Force
-(Get-Content $f -Raw) -replace ',MyFocusriteControl,not approved', ',MyFocusriteControl,approved' |
+(Get-Content $f -Raw) -replace ',PyFocusriteControl,not approved', ',PyFocusriteControl,approved' |
     Set-Content $f -NoNewline -Encoding ascii
 Get-Content $f
 ```
 
 The file is `client-key,hostname,status`; your line should now read
-`...,MyFocusriteControl,approved`. This persists (the `client_key` is stable).
+`...,PyFocusriteControl,approved`. This persists (the `client_key` is stable).
 Check status anytime with `py -3 fc.py pair` (it prints each client's
 `authorised=` flag). Revert with `Copy-Item "$f.bak" $f -Force`.
 

@@ -50,7 +50,7 @@ STATE_PATH = _HOME / "state.json"
 
 DEFAULT_CONFIG = {
     "client_key": None,          # stable UUID, generated on first run
-    "hostname": "MyFocusriteControl",  # name shown in the FC app for approval
+    "hostname": "PyFocusriteControl",  # name shown in the FC app for approval
     "devid": "1",
     "mute_item_id": None,        # discovered per model (step 2/3 above)
     "value_muted": "true",
@@ -109,7 +109,7 @@ def save_state(**kwargs) -> None:
 
 def _connect_on_port(cfg: dict, port: int) -> Connection:
     return Connection(
-        port, cfg["client_key"], hostname=cfg.get("hostname", "MyFocusriteControl")
+        port, cfg["client_key"], hostname=cfg.get("hostname", "PyFocusriteControl")
     ).connect()
 
 
@@ -335,7 +335,7 @@ def cmd_pair(args, cfg) -> int:
     / "allow to connect" prompt) while this runs. Because our client_key is
     stable, approval persists across future runs.
     """
-    host = cfg.get("hostname", "MyFocusriteControl")
+    host = cfg.get("hostname", "PyFocusriteControl")
     print(f"Connecting as hostname={host!r}")
     print(f"client_key={cfg['client_key']}\n")
     print("=> Open the Focusrite Control DESKTOP app now and approve this client")

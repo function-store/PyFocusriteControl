@@ -37,7 +37,7 @@ def unmute(item_id, devid="1") -> str:
 
 
 # -- handshake / protocol messages (usually sent for you by Connection) --
-def client_details(client_key, hostname="MyFocusriteControl") -> str:
+def client_details(client_key, hostname="PyFocusriteControl") -> str:
     return f'<client-details client-key="{client_key}" hostname="{hostname}"/>'
 
 
